@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1 id= "counter-output" >counter : 0</h1>
+    <button id="bae-inc" > Inc </button>
+    <button id="bae-dec" > Dec </button>
+
+
+    <script>
+        var counterOutput = document.getElementById("counter-output")
+        var baeInc= document.getElementById("bae-inc");
+        var counter = 0 //변수 선언
+        var baeDec = document.getElementById("bae-dec");
+
+        baeInc.addEventListener('click', ()=> {
+           console.log('click test' + counter)
+           counter = counter + 1
+           counterOutput.innerText = "counter : " + counter
+        })
+
+        baeDec.addEventListener('click', () => {
+            console.log('click test' + counter)
+            counter = counter - 1
+            counterOutput.innerText = "counter : " + counter;
+        });
+    </script>
+
+
+</body>
+</html>
