@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>간단 계산기</title>
+</head>
+<body>
+  <h1>간단 계산기</h1>
+
+  숫자1: <input type="number" id="num1"><br><br>
+  숫자2: <input type="number" id="num2"><br><br>
+
+  <button id="calcBtn">계산하기</button>
+
+  <h2>결과</h2>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('calcBtn').onclick = function() {
+      const n1 = Number(document.getElementById('num1').value);
+      const n2 = Number(document.getElementById('num2').value);
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '';
+
+      if (isNaN(n1) || isNaN(n2)) {
+        alert('숫자를 모두 입력하세요.');
+        return;
+      }
+
+      resultDiv.innerHTML += `덧셈: ${n1} + ${n2} = ${n1 + n2}<br>`;
+      resultDiv.innerHTML += `뺄셈: ${n1} - ${n2} = ${n1 - n2}<br>`;
+      resultDiv.innerHTML += `곱셈: ${n1} × ${n2} = ${n1 * n2}<br>`;
+
+      if (n2 === 0) {
+        resultDiv.innerHTML += '나눗셈: 0으로 나눌 수 없습니다.<br>';
+      } else {
+        resultDiv.innerHTML += `나눗셈: ${n1} ÷ ${n2} = ${n1 / n2}<br>`;
+      }
+    };
+  </script>
+</body>
+</html>
