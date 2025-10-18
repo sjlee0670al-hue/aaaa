@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>간단 기차표 예약</title>
+</head>
+<body>
+  <h1>기차표 예약</h1>
+
+  이름: <input type="text" id="name"><br><br>
+  기차:
+  <select id="train">
+    <option value="KTX">KTX</option>
+    <option value="새마을">새마을호</option>
+    <option value="무궁화">무궁화호</option>
+  </select><br><br>
+  출발일: <input type="date" id="date"><br><br>
+  좌석수: <input type="number" id="seats" value="1" min="1"><br><br>
+
+  <button id="reserveBtn">예약하기</button>
+
+  <h2>예약 내역</h2>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('reserveBtn').onclick = function() {
+      const name = document.getElementById('name').value.trim();
+      const train = document.getElementById('train').value;
+      const date = document.getElementById('date').value;
+      const seats = document.getElementById('seats').value;
+
+      if (!name || !date || seats < 1) {
+        alert('모든 정보를 입력해주세요.');
+        return;
+      }
+
+      const result = document.getElementById('result');
+      const text = `${name}님, ${date}에 ${train} 기차 ${seats}석 예약 완료!<br>`;
+      result.innerHTML += text;
+
+      // 입력 초기화
+      document.getElementById('name').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('seats').value = 1;
+    };
+  </script>
+</body>
+</html>
