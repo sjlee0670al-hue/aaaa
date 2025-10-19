@@ -1,24 +1,35 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>간단 카운터</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h1>카운터</h1>
+    <h1 id= "counter-output" >counter : 0</h1>
+    <button id="cwr-inc" > Inc </button>
+    <button id="cwr-dec" > Dec </button>
 
-  <div id="count" style="font-size: 48px; margin-bottom: 20px;">0</div>
-  <button id="incrementBtn">증가</button>
 
-  <script>
-    let count = 0;
-    const countDiv = document.getElementById('count');
-    const btn = document.getElementById('incrementBtn');
+    <script>
+        var counterOutput = document.getElementById("counter-output")
+        var cwrInc= document.getElementById("cwr-inc");
+        var counter = 0 //변수 선언
+        var cwrDec = document.getElementById("cwr-dec");
 
-    btn.onclick = function() {
-      count++;
-      countDiv.textContent = count;
-    };
-  </script>
+        cwrInc.addEventListener('click', ()=> {
+           console.log('click test' + counter)
+           counter = counter + 1
+           counterOutput.innerText = "counter : " + counter
+        })
+
+        cwrDec.addEventListener('click', () => {
+            console.log('click test' + counter)
+            counter = counter - 1
+            counterOutput.innerText = "counter : " + counter;
+        });
+    </script>
+
+
 </body>
 </html>

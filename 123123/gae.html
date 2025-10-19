@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>간단 계산기</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h1>간단 계산기</h1>
+    <div>
+        <input id="inp-num1"/> + <input id= "inp-num2"/> = <input id="inp-out"/>
+    
+    </div>
+    <div>
+        <button id="btn-plus"> submit </button>
+    </div>
 
-  숫자1: <input type="number" id="num1"><br><br>
-  숫자2: <input type="number" id="num2"><br><br>
+    <script>
+        var inpNum1 = document.getElementById("inp-num1")
+        var inpNum2 = document.getElementById("inp-num2")
+        var inpOut = document.getElementById("inp-out")
+        var btnPlus = document.getElementById("btn-plus")
 
-  <button id="calcBtn">계산하기</button>
 
-  <h2>결과</h2>
-  <div id="result"></div>
+        btnPlus.addEventListener('click',()=> {
 
-  <script>
-    document.getElementById('calcBtn').onclick = function() {
-      const n1 = Number(document.getElementById('num1').value);
-      const n2 = Number(document.getElementById('num2').value);
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '';
+            var num1 = parseInt(inpNum1.value)
+            var num2 = parseInt(inpNum2.value)
 
-      if (isNaN(n1) || isNaN(n2)) {
-        alert('숫자를 모두 입력하세요.');
-        return;
-      }
+            console.log(num1+num2)
 
-      resultDiv.innerHTML += `덧셈: ${n1} + ${n2} = ${n1 + n2}<br>`;
-      resultDiv.innerHTML += `뺄셈: ${n1} - ${n2} = ${n1 - n2}<br>`;
-      resultDiv.innerHTML += `곱셈: ${n1} × ${n2} = ${n1 * n2}<br>`;
+            inpOut.value = num1+num2
 
-      if (n2 === 0) {
-        resultDiv.innerHTML += '나눗셈: 0으로 나눌 수 없습니다.<br>';
-      } else {
-        resultDiv.innerHTML += `나눗셈: ${n1} ÷ ${n2} = ${n1 / n2}<br>`;
-      }
-    };
-  </script>
+        })
+    </script>
+
 </body>
 </html>
