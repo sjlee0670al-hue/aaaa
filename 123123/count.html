@@ -7,32 +7,32 @@
 </head>
 <body>
     <h1 id= "counter-output" >counter : 0</h1>
-    <button id="cwr-inc" > Inc </button>
-    <button id="cwr-dec" > Dec </button>
-    <button id="cwr-re" > Reset </button>
+    <button id="aaa1-inc" > Inc </button>
+    <button id="aaa2-dec" > Dec </button>
+    <button id="aaa3-re" > Reset </button>
 
 
     <script>
         var counterOutput = document.getElementById("counter-output")
-        var cwrInc= document.getElementById("cwr-inc");
+        var aaaInc= document.getElementById("aaa1-inc");
         var counter = 0 //변수 선언
-        var cwrDec = document.getElementById("cwr-dec");
-        var cwrRes = document.getElementById("cwr-re");
+        var aaaDec = document.getElementById("aaa2-dec");
+        var aaaRes = document.getElementById("aaa3-re");
 
 
-        cwrInc.addEventListener('click', ()=> {
+        aaaInc.addEventListener('click', ()=> {
            console.log('click test' + counter)
            counter = counter + 1
            counterOutput.innerText = "counter : " + counter
         })
 
-        cwrDec.addEventListener('click', () => {
+        aaaDec.addEventListener('click', () => {
             console.log('click test' + counter)
             counter = counter - 1
             counterOutput.innerText = "counter : " + counter;
         });
 
-        cwrRes.addEventListener('click', () => {
+        aaaRes.addEventListener('click', () => {
             console.log('click test' + counter)
             counter = 0
             counterOutput.innerText = "counter : " + counter;
