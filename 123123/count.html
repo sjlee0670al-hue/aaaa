@@ -9,6 +9,7 @@
     <h1 id= "counter-output" >counter : 0</h1>
     <button id="cwr-inc" > Inc </button>
     <button id="cwr-dec" > Dec </button>
+    <button id="cwr-re" > Reset </button>
 
 
     <script>
@@ -16,6 +17,8 @@
         var cwrInc= document.getElementById("cwr-inc");
         var counter = 0 //변수 선언
         var cwrDec = document.getElementById("cwr-dec");
+        var cwrRes = document.getElementById("cwr-re");
+
 
         cwrInc.addEventListener('click', ()=> {
            console.log('click test' + counter)
@@ -26,6 +29,12 @@
         cwrDec.addEventListener('click', () => {
             console.log('click test' + counter)
             counter = counter - 1
+            counterOutput.innerText = "counter : " + counter;
+        });
+
+        cwrRes.addEventListener('click', () => {
+            console.log('click test' + counter)
+            counter = 0
             counterOutput.innerText = "counter : " + counter;
         });
     </script>
