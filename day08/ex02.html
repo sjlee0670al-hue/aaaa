@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        body {
+        margin:0px;
+        padding: 0px;
+    }
+    .box {
+        width: 64px;
+        height: 64px;
+        background-color: rgb(255,175,3);
+        color: white;
+        /*font-size: 8px;*/
+        border: 1px solid black;
+        margin-bottom: 8px;
+    }
+
+    .anim.type-1 {
+        animation-name: move;
+        animation-duration: 3s;
+        animation-iteration-count: 1;
+        animation-direction: alternate;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes move{
+        from {left : 0px;}
+        to {lefty: 300px;}
+    }
+    </style>
+<body>
+    <div class="box anim.type-1" >
+
+    </div>
+    
+</body>
+</html>
