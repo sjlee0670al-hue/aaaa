@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    body {
+        margin: 0px;
+        background-color: black;
+
+    }
+    .box {
+            width: 250px;
+            height: 32px;
+            background-color: blue;
+            color: white;
+            margin: 8px;
+        }
+        .type-1 {
+            overflow-wrap: normal;
+            word-break: break-all;
+        }
+        .type-2 {
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+        .type-3 {
+            overflow-wrap: anywhere;
+        }
+        .type-4 {
+            overflow-wrap: normal;
+            word-break: normal;
+            overflow: hidden;
+        }
+
+</style>
+</head>
+<body>
+    <div class="box">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+    <div class="box type-1">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+    <div class="box type-2">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+    <div class="box type-3">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+    <div class="box type-4">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    </div>
+
+</body>
+</html>
