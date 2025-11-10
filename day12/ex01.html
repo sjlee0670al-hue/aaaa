@@ -7,7 +7,25 @@
     <style>
         @import url('./main.css');
 
-      
+        /* 우측 상단 version 표시 */
+        .version {
+            position: fixed;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #ccc;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 좌측 하단 copyright 표시 */
+        .copyright {
+            position: fixed;
+            bottom: 10px;
+            left: 15px;
+            font-size: 24px;
+            color: #ccc;
+            font-family: Arial, sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -24,10 +42,13 @@
         옵션
     </div>
 
+    <!-- 추가된 표시 영역 -->
+    <div class="version">version 1.0</div>
+    <div class="copyright">© 10454.gbox3d</div>
+
     <script type="module">
         import main from './index.js'
         main();
     </script>
 </body>
 </html>
-
