@@ -31,15 +31,15 @@ height: 100vh;
 }
 
 .top-right {
-    position: absolute;
+   position: fixed;
     top: 10px;
-    right: 20px;
-    font-size: 20px;
+    right: 15px;
+    font-size: 14px;
 }
 
 .bottom-left{
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
-    font-size: 20px;
+   position: fixed;
+    bottom: 10px; 
+    left: 15px;
+    font-size: 14px;
 }
