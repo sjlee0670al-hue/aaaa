@@ -13,12 +13,11 @@ height: 100vh;
 }
 
 @font-face {
-    font-family: 'PartialSans';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
+    font-family: 'Yeongwol';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
     font-weight: normal;
     font-display: swap;
 }
-
 
 .big-text {
     font-size: 64px;
