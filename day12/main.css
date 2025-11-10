@@ -1,0 +1,32 @@
+body {
+display: flex;
+margin: 0px;
+padding: 0px;
+background-color: blue;
+color: white;
+font-family: 'Yeongwol';   
+
+align-items: center;
+flex-direction: column;
+justify-content: center;
+height: 100vh;
+}
+
+@font-face {
+    font-family: 'PartialSans';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-display: swap;
+}
+
+
+.big-text {
+    font-size: 64px;
+    margin-bottom: 30px;
+
+}
+
+.mid-text {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
