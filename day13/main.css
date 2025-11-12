@@ -24,16 +24,17 @@ height: 100vh;
 .header {
     display: flex;
     padding: 16px;
-    background-color: yellow;
-    color: black;
+    /*background-color: yellow;
+    color: black;*/
+    justify-content: flex end;
 
 }
 
 .footer {
     display: flex;
     padding: 16px;
-    /*background-color: black;*/
-    color: white;
+    /*background-color: black;
+    color: white;*/
 }
 
 main {
@@ -41,6 +42,7 @@ main {
     flex-grow: 1;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     
 }
 
@@ -48,11 +50,7 @@ main {
     font-size: 64px;
 }
 
-.menu {
-    display: flex;
-    flex : 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.menu-item {
+    font-size: 32px;
 }
 
