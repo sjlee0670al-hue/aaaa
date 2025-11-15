@@ -1,0 +1,45 @@
+body {
+display: flex;
+margin: 0px;
+padding: 0px;
+background-color: blue;
+color: white;
+font-family: 'Yeongwol';   
+
+align-items: center;
+flex-direction: column;
+justify-content: center;
+height: 100vh;
+}
+
+@font-face {
+    font-family: 'Yeongwol';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-display: swap;
+}
+
+.big-text {
+    font-size: 64px;
+    margin-bottom: 30px;
+
+}
+
+.mid-text {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.top-right {
+   position: fixed;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+}
+
+.bottom-left{
+   position: fixed;
+    bottom: 10px; 
+    left: 15px;
+    font-size: 24px;
+}
