@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단 날씨 앱</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f4f7f9;
+        }
+        #weather-container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .weather-info p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>날씨 정보 조회 서비스</h1>
+    <div>
+        <input type="text" id="city-input" placeholder="도시 이름 (예: Seoul)" value="Seoul">
+        <button onclick="fetchWeather()">날씨 확인</button>
+    </div>
+
+    <div id="weather-container">
+        <h2><span id="city-name">도시 이름</span></h2>
+        <div class="weather-info">
+            <p>날씨: <span id="weather-desc">로딩 중...</span></p>
+            <p>현재 온도: <span id="temperature">--</span>°C</p>
+            <p>습도: <span id="humidity">--</span>%</p>
+            <p>바람 속도: <span id="wind-speed">--</span> m/s</p>
+        </div>
+        <p class="error" id="error-message"></p>
+    </div>
+
+    <script>
+        // 여기에 발급받은 OpenWeatherMap API 키를 입력하세요.
+        const API_KEY = "32859c3aa434a7ec8e070569ad8b519d13534f4bee7ad7e863a28ea0f49490d3"; // <<<--- 반드시 이 부분을 수정하세요!
+        const BASE_URL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0";
+
+        // DOM 요소 가져오기
+        const cityNameEl = document.getElementById('city-name');
+        const weatherDescEl = document.getElementById('weather-desc');
+        const tempEl = document.getElementById('temperature');
+        const humidityEl = document.getElementById('humidity');
+        const windSpeedEl = document.getElementById('wind-speed');
+        const errorEl = document.getElementById('error-message');
+
+        async function fetchWeather() {
+            const cityInput = document.getElementById('city-input').value;
+            errorEl.textContent = ''; // 오류 메시지 초기화
+            
+            if (!cityInput) {
+                errorEl.textContent = '도시 이름을 입력해주세요.';
+                return;
+            }
+
+            // API 호출 URL 생성
+            const url = `${BASE_URL}?q=${cityInput}&appid=${API_KEY}&units=metric&lang=kr`;
+            
+            try {
+                // fetch를 사용하여 API에 비동기 요청
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // 데이터가 성공적으로 받아와졌을 때 HTML 요소 업데이트
+                    cityNameEl.textContent = data.name;
+                    weatherDescEl.textContent = data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1);
+                    tempEl.textContent = data.main.temp.toFixed(1);
+                    humidityEl.textContent = data.main.humidity;
+                    windSpeedEl.textContent = data.wind.speed.toFixed(1);
+                    
+                } else {
+                    // API 응답 상태 코드가 200이 아닐 때 (예: 도시 이름 오류)
+                    errorEl.textContent = `⚠️ 오류: ${data.message || '날씨 정보를 가져오는 데 실패했습니다.'}`;
+                    // 정보 초기화
+                    cityNameEl.textContent = cityInput;
+                    weatherDescEl.textContent = '--';
+                    tempEl.textContent = '--';
+                    humidityEl.textContent = '--';
+                    windSpeedEl.textContent = '--';
+                }
+
+            } catch (error) {
+                // 네트워크 오류 등 요청 자체의 실패
+                errorEl.textContent = '❌ 네트워크 연결에 문제가 발생했습니다.';
+                console.error("Fetch error:", error);
+            }
+        }
+
+        // 페이지 로드 시 기본 도시(Seoul)의 날씨를 바로 불러오기
+        window.onload = () => fetchWeather();
+    </script>
+
+</body>
+</html>
