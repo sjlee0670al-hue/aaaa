@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지도 기반 고급 날씨 앱</title>
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Leaflet 지도 라이브러리 -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #89CFF0, #5D8BF4);
+            color: #fff;
+        }
+
+        h1 {
+            font-weight: 600;
+            margin-top: 10px;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 검색창 */
+        #control-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            width: 170px;
+            font-size: 1em;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #ffcc29;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+        }
+
+        /* 날씨 카드 */
+        #weather-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            width: 330px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 1.2s ease;
+        }
+
+        #weather-icon {
+            width: 80px;
+            margin: 10px 0;
+        }
+
+        /* 지도 영역 */
+        #map {
+            width: 20%;
+            height: 350px;
+            border-radius: 12px;
+            margin-top: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .error {
+            color: #ff4d4d;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌤 지도 기반 날씨 조회</h1>
+
+    <div id="control-container">
+        <input type="text" id="city-input" placeholder="도시 이름 (예: Seoul)" value="Seoul">
+        <button onclick="fetchWeather()">조회</button>
+    </div>
+
+    <!-- 지도 -->
+    <div id="map"></div>
+
+    <!-- 날씨 카드 -->
+    <div id="weather-container">
+        <h2 id="city-name">도시 이름</h2>
+        <img id="weather-icon" src="" alt="weather icon">
+        <div class="weather-info">
+            <p>날씨: <span id="weather-desc">--</span></p>
+            <p>온도: <span id="temperature">--</span>°C</p>
+            <p>습도: <span id="humidity">--</span>%</p>
+            <p>바람: <span id="wind-speed">--</span> m/s</p>
+        </div>
+        <p class="error" id="error-message"></p>
+    </div>
+
+    <script>
+        const API_KEY = "db35be491245abfc0367098faedbb189";
+        const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+
+        const cityNameEl = document.getElementById('city-name');
+        const weatherDescEl = document.getElementById('weather-desc');
+        const tempEl = document.getElementById('temperature');
+        const humidityEl = document.getElementById('humidity');
+        const windSpeedEl = document.getElementById('wind-speed');
+        const errorEl = document.getElementById('error-message');
+        const weatherIconEl = document.getElementById('weather-icon');
+
+        // Leaflet 지도 초기화
+        const map = L.map('map').setView([37.5665, 126.9780], 7); // 한국 중심
+
+        // 지도 타일 추가
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        let marker; // 클릭할 때마다 위치표시 갱신
+
+        // 지도 클릭 이벤트
+        map.on('click', async (e) => {
+            const { lat, lng } = e.latlng;
+
+            // 기존 마커 제거하고 새로 추가
+            if (marker) marker.remove();
+            marker = L.marker([lat, lng]).addTo(map);
+
+            fetchWeatherByCoords(lat, lng);
+        });
+
+        // 좌표로 날씨 조회
+        async function fetchWeatherByCoords(lat, lon) {
+            const url = `${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (response.ok) {
+                    updateWeatherUI(data);
+                } else {
+                    errorEl.textContent = "⚠️ 해당 지역의 날씨를 가져올 수 없습니다.";
+                }
+
+            } catch (error) {
+                errorEl.textContent = "❌ 네트워크 오류가 발생했습니다.";
+                console.error(error);
+            }
+        }
+
+        // 도시 이름으로 날씨 조회
+        async function fetchWeather() {
+            const cityInput = document.getElementById('city-input').value;
+            errorEl.textContent = "";
+
+            const url = `${BASE_URL}?q=${cityInput}&appid=${API_KEY}&units=metric&lang=kr`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (response.ok) {
+                    updateWeatherUI(data);
+
+                    // 지도 이동 & 마커 표시
+                    const lat = data.coord.lat;
+                    const lon = data.coord.lon;
+
+                    map.setView([lat, lon], 10);
+
+                    if (marker) marker.remove();
+                    marker = L.marker([lat, lon]).addTo(map);
+
+                } else {
+                    errorEl.textContent = "⚠️ 도시를 찾을 수 없습니다.";
+                }
+
+            } catch (error) {
+                errorEl.textContent = "❌ 네트워크 오류가 발생했습니다.";
+            }
+        }
+
+        // UI 업데이트
+        function updateWeatherUI(data) {
+            cityNameEl.textContent = data.name || "위치";
+            weatherDescEl.textContent =
+                data.weather[0].description.charAt(0).toUpperCase() +
+                data.weather[0].description.slice(1);
+
+            tempEl.textContent = data.main.temp.toFixed(1);
+            humidityEl.textContent = data.main.humidity;
+            windSpeedEl.textContent = data.wind.speed.toFixed(1);
+
+            const iconCode = data.weather[0].icon;
+            weatherIconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+            errorEl.textContent = "";
+        }
+
+        // 시작 시 서울 날씨 표시
+        window.onload = () => fetchWeather();
+    </script>
+
+</body>
+</html>

@@ -1,138 +1,189 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단 날씨 앱</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            background-color: #f4f7f9;
-        }
-        #weather-container {
-            background-color: #ffffff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 150px;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .weather-info p {
-            margin: 5px 0;
-            font-size: 1.1em;
-            color: #555;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지도 기반 날씨 앱</title>
+
+<!-- 구글 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        transition: background 1s;
+        background: linear-gradient(135deg, #89CFF0, #5D8BF4);
+        color: #fff;
+    }
+
+    h1 {
+        font-weight: 600;
+        margin-top: 20px;
+        text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #map {
+        width: 90%;
+        max-width: 800px;
+        height: 400px;
+        margin-top: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    #weather-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        margin-top: 20px;
+        padding: 25px;
+        border-radius: 15px;
+        width: 330px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        font-size: 1.5em;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .weather-info p {
+        margin: 8px 0;
+        font-size: 1.1em;
+    }
+
+    #weather-icon {
+        width: 80px;
+        margin: 10px 0;
+    }
+
+    .error {
+        color: #ff4d4d;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
 </head>
 <body>
 
-    <h1>날씨 정보 조회 서비스</h1>
-    <div>
-        <input type="text" id="city-input" placeholder="도시 이름 (예: Seoul)" value="Seoul">
-        <button onclick="fetchWeather()">날씨 확인</button>
+<h1>🌤 지도 기반 날씨 조회</h1>
+
+<div id="map"></div>
+
+<div id="weather-container">
+    <h2 id="city-name">도시 이름</h2>
+    <img id="weather-icon" src="" alt="weather icon">
+    <div class="weather-info">
+        <p>날씨: <span id="weather-desc">--</span></p>
+        <p>온도: <span id="temperature">--</span>°C</p>
+        <p>습도: <span id="humidity">--</span>%</p>
+        <p>바람: <span id="wind-speed">--</span> m/s</p>
     </div>
+    <p class="error" id="error-message"></p>
+</div>
 
-    <div id="weather-container">
-        <h2><span id="city-name">도시 이름</span></h2>
-        <div class="weather-info">
-            <p>날씨: <span id="weather-desc">로딩 중...</span></p>
-            <p>현재 온도: <span id="temperature">--</span>°C</p>
-            <p>습도: <span id="humidity">--</span>%</p>
-            <p>바람 속도: <span id="wind-speed">--</span> m/s</p>
-        </div>
-        <p class="error" id="error-message"></p>
-    </div>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script>
-        // 여기에 발급받은 OpenWeatherMap API 키를 입력하세요.
-        const API_KEY = "db35be491245abfc0367098faedbb189"; // <<<--- 반드시 이 부분을 수정하세요!
-        const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+<script>
+const API_KEY = "db35be491245abfc0367098faedbb189";
+const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
-        // DOM 요소 가져오기
-        const cityNameEl = document.getElementById('city-name');
-        const weatherDescEl = document.getElementById('weather-desc');
-        const tempEl = document.getElementById('temperature');
-        const humidityEl = document.getElementById('humidity');
-        const windSpeedEl = document.getElementById('wind-speed');
-        const errorEl = document.getElementById('error-message');
+const cityNameEl = document.getElementById('city-name');
+const weatherDescEl = document.getElementById('weather-desc');
+const tempEl = document.getElementById('temperature');
+const humidityEl = document.getElementById('humidity');
+const windSpeedEl = document.getElementById('wind-speed');
+const errorEl = document.getElementById('error-message');
+const weatherIconEl = document.getElementById('weather-icon');
 
-        async function fetchWeather() {
-            const cityInput = document.getElementById('city-input').value;
-            errorEl.textContent = ''; // 오류 메시지 초기화
-            
-            if (!cityInput) {
-                errorEl.textContent = '도시 이름을 입력해주세요.';
-                return;
+const cities = [
+    { name: "Seoul,KR", lat: 37.5665, lon: 126.9780 },
+    { name: "Busan,KR", lat: 35.1796, lon: 129.0756 },
+    { name: "Daegu,KR", lat: 35.8714, lon: 128.6014 },
+    { name: "Incheon,KR", lat: 37.4563, lon: 126.7052 },
+    { name: "Gwangju,KR", lat: 35.1595, lon: 126.8526 },
+    { name: "Daejeon,KR", lat: 36.3504, lon: 127.3845 },
+    { name: "Ulsan,KR", lat: 35.5384, lon: 129.3114 },
+    { name: "Gangneung,KR", lat: 37.7519, lon: 128.8761 },
+    { name: "Jeonju,KR", lat: 35.8210, lon: 127.1470 } // 전주 추가
+];
+
+// 지도 초기화
+const map = L.map('map').setView([36.5, 127.5], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18
+}).addTo(map);
+
+// 마커 생성 및 클릭 이벤트
+cities.forEach(c => {
+    const marker = L.marker([c.lat, c.lon]).addTo(map)
+        .bindPopup(c.name);
+
+    marker.on('click', () => fetchWeather(c.name, c.lat, c.lon));
+});
+
+// 날씨 가져오기
+async function fetchWeather(city, lat, lon) {
+    errorEl.textContent = '';
+    const url = `${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (response.ok && data.weather) {
+            cityNameEl.textContent = city.split(',')[0];
+            weatherDescEl.textContent =
+                data.weather[0].description.charAt(0).toUpperCase() +
+                data.weather[0].description.slice(1);
+            tempEl.textContent = data.main.temp.toFixed(1);
+            humidityEl.textContent = data.main.humidity;
+            windSpeedEl.textContent = data.wind.speed.toFixed(1);
+
+            const iconCode = data.weather[0].icon;
+            weatherIconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+            // 배경 변경
+            const mainWeather = data.weather[0].main.toLowerCase();
+            switch(mainWeather){
+                case 'clear': document.body.style.background = 'linear-gradient(135deg, #fceabb, #f8b500)'; break;
+                case 'clouds': document.body.style.background = 'linear-gradient(135deg, #d7d2cc, #304352)'; break;
+                case 'rain': case 'drizzle': document.body.style.background = 'linear-gradient(135deg, #667db6, #0082c8)'; break;
+                case 'thunderstorm': document.body.style.background = 'linear-gradient(135deg, #141e30, #243b55)'; break;
+                case 'snow': document.body.style.background = 'linear-gradient(135deg, #e6dada, #274046)'; break;
+                case 'mist': case 'fog': document.body.style.background = 'linear-gradient(135deg, #757f9a, #d7dde8)'; break;
+                default: document.body.style.background = 'linear-gradient(135deg, #89CFF0, #5D8BF4)';
             }
-
-            // API 호출 URL 생성
-            const url = `${BASE_URL}?q=${cityInput}&appid=${API_KEY}&units=metric&lang=kr`;
-            
-            try {
-                // fetch를 사용하여 API에 비동기 요청
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    // 데이터가 성공적으로 받아와졌을 때 HTML 요소 업데이트
-                    cityNameEl.textContent = data.name;
-                    weatherDescEl.textContent = data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1);
-                    tempEl.textContent = data.main.temp.toFixed(1);
-                    humidityEl.textContent = data.main.humidity;
-                    windSpeedEl.textContent = data.wind.speed.toFixed(1);
-                    
-                } else {
-                    // API 응답 상태 코드가 200이 아닐 때 (예: 도시 이름 오류)
-                    errorEl.textContent = `⚠️ 오류: ${data.message || '날씨 정보를 가져오는 데 실패했습니다.'}`;
-                    // 정보 초기화
-                    cityNameEl.textContent = cityInput;
-                    weatherDescEl.textContent = '--';
-                    tempEl.textContent = '--';
-                    humidityEl.textContent = '--';
-                    windSpeedEl.textContent = '--';
-                }
-
-            } catch (error) {
-                // 네트워크 오류 등 요청 자체의 실패
-                errorEl.textContent = '❌ 네트워크 연결에 문제가 발생했습니다.';
-                console.error("Fetch error:", error);
-            }
+        } else {
+            errorEl.textContent = `⚠️ 오류: ${data.message || '정보를 가져올 수 없습니다.'}`;
         }
 
-        // 페이지 로드 시 기본 도시(Seoul)의 날씨를 바로 불러오기
-        window.onload = () => fetchWeather();
-    </script>
+    } catch (error) {
+        errorEl.textContent = '❌ 네트워크 문제로 데이터를 불러올 수 없습니다.';
+        console.error(error);
+    }
+}
+
+// 페이지 로드 시 기본 도시 서울 날씨
+window.onload = () => fetchWeather("Seoul,KR", 37.5665, 126.9780);
+</script>
 
 </body>
 </html>
