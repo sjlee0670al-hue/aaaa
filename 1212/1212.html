@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>지도 기반 고급 날씨 앱</title>
+    <title>지도 기반 날씨 앱 (단일 파일 버전)</title>
 
-    <!-- 구글 폰트 -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <!-- Leaflet 지도 라이브러리 -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -19,8 +17,10 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            /* 기본 배경: 밝은 파랑 */
             background: linear-gradient(135deg, #89CFF0, #5D8BF4);
             color: #fff;
+            transition: background 1.5s ease-in-out; /* 부드러운 전환 효과 */
         }
 
         h1 {
@@ -86,7 +86,8 @@
 
         /* 지도 영역 */
         #map {
-            width: 20%;
+            width: 80%; /* 넓이를 넓혀서 잘 보이도록 수정 */
+            max-width: 600px;
             height: 350px;
             border-radius: 12px;
             margin-top: 25px;
@@ -98,9 +99,47 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
+        /* ----------------------------------- */
+        /* 💡 날씨별 배경화면 스타일 */
+        /* ----------------------------------- */
+
+        /* 맑음 (01d, 01n) - 해/달이 있는 맑은 하늘 */
+        .clear-sky {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+        /* 맑음 (밤) */
+        .clear-sky.night {
+            background: linear-gradient(135deg, #191970, #4682B4);
+        }
+
+        /* 구름 (02d, 03d, 04d) */
+        .clouds {
+            background: linear-gradient(135deg, #B0C4DE, #778899);
+        }
+
+        /* 비/이슬비 (09d, 10d) */
+        .rain {
+            background: linear-gradient(135deg, #708090, #4682B4);
+        }
+
+        /* 천둥/번개 (11d) */
+        .thunderstorm {
+            background: linear-gradient(135deg, #483D8B, #2F4F4F);
+        }
+
+        /* 눈 (13d) */
+        .snow {
+            background: linear-gradient(135deg, #E0FFFF, #ADD8E6);
+        }
+
+        /* 안개/기타 대기 현상 (50d) */
+        .mist {
+            background: linear-gradient(135deg, #B0C4DE, #DCDCDC);
+        }
     </style>
 </head>
-<body>
+<body id="weather-body">
 
     <h1>🌤 지도 기반 날씨 조회</h1>
 
@@ -109,10 +148,8 @@
         <button onclick="fetchWeather()">조회</button>
     </div>
 
-    <!-- 지도 -->
     <div id="map"></div>
 
-    <!-- 날씨 카드 -->
     <div id="weather-container">
         <h2 id="city-name">도시 이름</h2>
         <img id="weather-icon" src="" alt="weather icon">
@@ -126,6 +163,7 @@
     </div>
 
     <script>
+        // ⚠️ 주의: 실제 OpenWeatherMap API 키로 교체해야 작동합니다.
         const API_KEY = "db35be491245abfc0367098faedbb189";
         const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
@@ -136,6 +174,7 @@
         const windSpeedEl = document.getElementById('wind-speed');
         const errorEl = document.getElementById('error-message');
         const weatherIconEl = document.getElementById('weather-icon');
+        const bodyEl = document.getElementById('weather-body');
 
         // Leaflet 지도 초기화
         const map = L.map('map').setView([37.5665, 126.9780], 7); // 한국 중심
@@ -161,6 +200,7 @@
         // 좌표로 날씨 조회
         async function fetchWeatherByCoords(lat, lon) {
             const url = `${BASE_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`;
+            errorEl.textContent = "날씨 정보를 가져오는 중...";
 
             try {
                 const response = await fetch(url);
@@ -181,7 +221,7 @@
         // 도시 이름으로 날씨 조회
         async function fetchWeather() {
             const cityInput = document.getElementById('city-input').value;
-            errorEl.textContent = "";
+            errorEl.textContent = "날씨 정보를 가져오는 중...";
 
             const url = `${BASE_URL}?q=${cityInput}&appid=${API_KEY}&units=metric&lang=kr`;
 
@@ -210,7 +250,7 @@
             }
         }
 
-        // UI 업데이트
+        // UI 업데이트 및 배경 변경
         function updateWeatherUI(data) {
             cityNameEl.textContent = data.name || "위치";
             weatherDescEl.textContent =
@@ -224,7 +264,51 @@
             const iconCode = data.weather[0].icon;
             weatherIconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
+            // 🌟 날씨별 배경화면 변경 로직 🌟
+            const weatherClass = getWeatherClass(iconCode);
+            
+            // 기존 날씨 클래스 제거
+            // bodyEl.className = ''; // 기본 그라데이션이 사라지지 않도록 classList.remove만 사용
+            bodyEl.classList.remove('clear-sky', 'clear-sky', 'night', 'clouds', 'rain', 'thunderstorm', 'snow', 'mist');
+
+            // 새 날씨 클래스 추가
+            if (weatherClass) {
+                // night 클래스는 clear-sky와 함께 적용될 수 있도록 처리
+                if (weatherClass.includes(' ')) {
+                    const classes = weatherClass.split(' ');
+                    classes.forEach(cls => bodyEl.classList.add(cls));
+                } else {
+                    bodyEl.classList.add(weatherClass);
+                }
+            }
+
             errorEl.textContent = "";
+        }
+
+        // 날씨 아이콘 코드를 기반으로 CSS 클래스 결정
+        function getWeatherClass(iconCode) {
+            const codePrefix = iconCode.substring(0, 2);
+            const isNight = iconCode.slice(-1) === 'n';
+
+            switch (codePrefix) {
+                case '01': // 맑음
+                    return isNight ? 'clear-sky night' : 'clear-sky';
+                case '02': // 약간의 구름
+                case '03': // 구름
+                case '04': // 흐림
+                    return 'clouds';
+                case '09': // 가벼운 비
+                case '10': // 비
+                    return 'rain';
+                case '11': // 천둥
+                    return 'thunderstorm';
+                case '13': // 눈
+                    return 'snow';
+                case '50': // 안개 등
+                    return 'mist';
+                default:
+                    return null; // 기본 배경 유지
+            }
         }
 
         // 시작 시 서울 날씨 표시
