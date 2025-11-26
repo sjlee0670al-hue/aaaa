@@ -1,43 +1,85 @@
 export default async function main() {
+    console.log('start App')  
 
-    console.log('start app')
+
+    const mainMenu = document.querySelector('#main-menu')
+    // const newGame = document.querySelector('')
+    const creditScreen = document.querySelector('#credit-screen')
+    let currentScreen = "mainMenu"
+
+    const optionScreen = document.querySelector('#option-screen');  
+
     
+    let currentIndex = 0;
+    const menuitems = document.querySelectorAll(".menu-item");
 
+    console.log(menuitems.length)
+    const menuitem_count = menuitems.length
 
+    menuitems[currentIndex].classList.add("select")
 
-const menuitems = document.querySelectorAll(".menu-item");
-const creditScreen = document.querySelector("credit-screen")
+    window.addEventListener("keydown", (e) => {
+        menuitems[currentIndex].classList.remove('select')
 
+        if(currentScreen == "mainMenu") {
 
-let currentIndex = 0;
-console.log(menuitems.length)
-const menuitems_count = menuitems.length
+            console.log(e.key)
+            if(e.key == "ArrowUp") {
+                currentIndex--
+                if(currentIndex < 0) {
+                    currentIndex = menuitem_count-1
+                }
+            }
+            else if(e.key == "ArrowDown") {
+                currentIndex++
+                currentIndex %=menuitem_count
+            }
+            else if(e.key == "Enter") {
+                console.log(menuitems[currentIndex].dataset.action)
+                const select_action = menuitems[currentIndex].dataset.action
 
-menuitems[currentIndex].classList.add("select")
+                if(select_action == 'credit') {
+                    mainMenu.classList.add('hide')
+                    creditScreen.classList.remove('hide')
+                    currentScreen = "creditScreen"
+                }
+                else if(select_action == 'option') {
+                    mainMenu.classList.add('hide');
+                    optionScreen.classList.remove('hide');
+                    currentScreen = "optionScreen";
+            }
+        }
 
-window.addEventListener("keydown", (e) => {
+            console.log(currentIndex)
+            menuitems[currentIndex].classList.add('select')
+            
 
+        }
+        else if(currentScreen == "creditScreen") {
 
-    menuitems[currentIndex].classList.remove('select')
-})
-    console.log(e.key)
+            console.log('credit screen')
 
-    if(e.key == "ArrowDown") {
-        currentIndex--}
-        if(currentIndex < 0) {
-            currentIndex = menuitems_count
-        
-    }   
-    else if(e.key == "ArrowDown") {
-        currentIndex++
-        currentIndex %=menuitems_count
+            if(e.key == "Enter") {
+                
+                creditScreen.classList.add('hide')
+                mainMenu.classList.remove('hide')
+                currentScreen = "mainMenu"
+            }
+        }
+        else if(currentScreen == "optionScreen") {  // 옵션 화면에서 Back 버튼 처리
+            console.log('option screen');
+            if(e.key == "Enter") {
+                optionScreen.classList.add('hide');
+                mainMenu.classList.remove('hide');
+                currentScreen = "mainMenu";
+
+              
+
     }
-
-else if(e.key == "Enter") 
-    console.log(menuitems[currentIndex].dataset.action)
-    if(select_action == "credit")
+}
+    });
 
     
-    console.log(currentIndex)
-    menuitems[currentIndex].classList.add('select')
+
+
 }
