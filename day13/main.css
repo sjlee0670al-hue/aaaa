@@ -1,52 +1,51 @@
 body {
-display: flex;
-margin: 0px;
-padding: 0px;
-background-color: blue;
-color: white;
-font-family: 'Yeongwol';   
-flex-direction: column;
-height: 100vh;
+    display: flex;
+    background-color: blue;
+    margin: 0px;
+    padding: 0px;
+    color: white;
+    font-family: 'RoundedFixedsys';    
+    flex-direction: column;
+    height: 100vh;
+
 }
 
 @font-face {
-    font-family: 'Yeongwol';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-family: 'RoundedFixedsys';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
     font-weight: normal;
     font-display: swap;
 }
+
 header {
     display: flex;
     padding: 16px;
-    /*background-color: yellow;*/
-    /*color: black;*/
+    /* background-color: yellow; */
+    /* color: black; */
     justify-content: flex-end;
-
 }
 
 footer {
     display: flex;
     padding: 16px;
-    /*background-color: black;*/
-    /*color: white;*/
-
+    /* background-color: black; */
+    /* color: white; */
 }
 
 main {
     display: flex;
-    flex-grow: 1;
+    flex : 1;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
+}
 
 .title {
     font-size: 64px;
-
 }
 
 .menu-item {
-font-size: 32px;
+    font-size: 32px;
 }
 
 .select {
@@ -54,3 +53,27 @@ font-size: 32px;
     color: white;
 }
 
+.hide {
+    display: none;
+}
+
+.option-title {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.option-item {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.back-button {
+    font-size: 24px;
+    color: lightgray;
+    cursor: pointer;
+}
+
+.back-button:hover {
+    color: white;
+}
+    
