@@ -1,0 +1,126 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    /* 기본 배경: 밝은 파랑 */
+    background: linear-gradient(135deg, #89CFF0, #5D8BF4);
+    color: #fff;
+    transition: background 1.5s ease-in-out; /* 부드러운 전환 효과 */
+}
+
+h1 {
+    font-weight: 600;
+    margin-top: 10px;
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 검색창 */
+#control-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+input[type="text"] {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    width: 170px;
+    font-size: 1em;
+    outline: none;
+    transition: 0.3s;
+}
+
+input[type="text"]:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+button {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #ffcc29;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ffb300;
+    transform: translateY(-2px);
+}
+
+/* 날씨 카드 */
+#weather-container {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    margin-top: 30px;
+    padding: 25px;
+    border-radius: 15px;
+    width: 330px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 1.2s ease;
+}
+
+#weather-icon {
+    width: 80px;
+    margin: 10px 0;
+}
+
+/* 지도 영역 */
+#map {
+    width: 80%; /* 넓이를 넓혀서 잘 보이도록 수정 */
+    max-width: 600px;
+    height: 350px;
+    border-radius: 12px;
+    margin-top: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.error {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* ----------------------------------- */
+/* 💡 날씨별 배경화면 스타일 */
+/* ----------------------------------- */
+
+/* 맑음 (01d, 01n) - 해/달이 있는 맑은 하늘 */
+.clear-sky {
+    background: linear-gradient(135deg, #89CFF0, #5D8BF4);
+}
+/* 맑음 (밤) */
+.clear-sky.night {
+    background: linear-gradient(135deg, #191970, #4682B4);
+}
+
+/* 구름 (02d, 03d, 04d) */
+.clouds {
+    background: linear-gradient(135deg, #B0C4DE, #778899);
+}
+
+/* 비/이슬비 (09d, 10d) */
+.rain {
+    background: linear-gradient(135deg, #708090, #4682B4);
+}
+
+/* 천둥/번개 (11d) */
+.thunderstorm {
+    background: linear-gradient(135deg, #483D8B, #2F4F4F);
+}
+
+/* 눈 (13d) */
+.snow {
+    background: linear-gradient(135deg, #E0FFFF, #ADD8E6);
+}
+
+/* 안개/기타 대기 현상 (50d) */
+.mist {
+    background: linear-gradient(135deg, #B0C4DE, #DCDCDC);
+}
