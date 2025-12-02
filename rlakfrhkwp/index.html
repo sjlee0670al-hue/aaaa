@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지도 기반 날씨 앱</title>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 배경 비디오 -->
+<video id="bg-video" autoplay muted loop playsinline></video>
+
+<!-- 입자 애니메이션용 캔버스 -->
+<canvas id="weather-canvas"></canvas>
+
+<h1>🌤 지도 기반 날씨 조회</h1>
+
+<div id="control-container">
+    <input type="text" id="city-input" placeholder="도시 이름 (예: Seoul)" value="Seoul">
+    <button onclick="fetchWeather()">조회</button>
+    <button onclick="addFavorite(document.getElementById('city-input').value)">★ 즐겨찾기 추가</button>
+</div>
+
+<div id="map"></div>
+
+<div id="weather-container">
+    <h2 id="city-name">도시 이름</h2>
+    <img id="weather-icon" src="" alt="weather icon">
+    <div class="weather-info">
+        <p>날씨: <span id="weather-desc">--</span></p>
+        <p>온도: <span id="temperature">--</span>°C</p>
+        <p>습도: <span id="humidity">--</span>%</p>
+        <p>바람: <span id="wind-speed">--</span> m/s</p>
+        <p>🌅 일출: <span id="sunrise">--</span></p>
+        <p>🌇 일몰: <span id="sunset">--</span></p>
+    </div>
+    <p class="error" id="error-message"></p>
+</div>
+
+<!-- 즐겨찾기 영역 -->
+<div id="favorites-container">
+    <h3>즐겨찾기</h3>
+    <ul id="favorites-list"></ul>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Custom JS -->
+<script src="script.js"></script>
+
+</body>
+</html>
