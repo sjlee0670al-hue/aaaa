@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>지도 기반 날씨 앱</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 배경 비디오 -->
+<video id="bg-video" autoplay muted loop playsinline></video>
+<canvas id="weather-canvas"></canvas>
+
+<h1>🌤 지도 기반 날씨 조회</h1>
+
+<div id="control-container">
+    <input type="text" id="city-input" placeholder="도시 이름 (예: Seoul)" value="Seoul">
+    <button onclick="fetchWeather()">조회</button>
+    <button onclick="addFavorite(document.getElementById('city-input').value)">★ 즐겨찾기 추가</button>
+    <select id="unit-select" onchange="updateUnits()">
+        <option value="metric">섭씨, m/s</option>
+        <option value="imperial">화씨, mph</option>
+    </select>
+    <button id="share-btn">SNS 공유</button>
+</div>
+
+<div id="map"></div>
+
+<!-- 날씨 카드 + 예보 카드 감싸는 컨테이너 -->
+<div id="weather-wrapper">
+    <div id="weather-container">
+        <h2 id="city-name">도시 이름</h2>
+        <img id="weather-icon" src="" alt="weather icon">
+        <div class="weather-info">
+            <p>날씨: <span id="weather-desc">--</span></p>
+            <p>온도: <span id="temperature">--</span></p>
+            <p>체감 온도: <span id="feels-like">--</span></p>
+            <p>습도: <span id="humidity">--</span>%</p>
+            <p>강수 확률: <span id="pop">--</span>%</p>
+            <p>바람: <span id="wind-speed">--</span></p>
+            <p>🌅 일출: <span id="sunrise">--</span></p>
+            <p>🌇 일몰: <span id="sunset">--</span></p>
+            <p>🕒 현재시간: <span id="local-time">--</span></p>
+            <p id="weather-tip"></p>
+        </div>
+        <p class="error" id="error-message"></p>
+    </div>
+
+    <div id="forecast-container">
+        <h3>3시간 단위 예보</h3>
+        <ul id="forecast-list"></ul>
+    </div>
+</div>
+
+<div id="favorites-container">
+    <h3>즐겨찾기</h3>
+    <ul id="favorites-list"></ul>
+</div>
+
+<div id="history-container">
+    <h3>최근 검색</h3>
+    <ul id="history-list"></ul>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
