@@ -124,3 +124,38 @@ button:hover { background: #ffb300; }
 #favorites-list li:hover {
     background: rgba(255,255,255,0.3);
 }
+
+/* 검색 기록 */
+#history-container {
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    width: 180px;
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    padding: 15px;
+    z-index: 5;
+    color: #fff;
+}
+
+#history-container h3 { margin-top: 0; text-align: center; }
+
+#history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#history-list li {
+    padding: 8px;
+    margin: 5px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#history-list li:hover {
+    background: rgba(255,255,255,0.3);
+}

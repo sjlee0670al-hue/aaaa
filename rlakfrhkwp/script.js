@@ -26,7 +26,7 @@ map.on("click", e => {
 });
 
 /* 즐겨찾기 */
-const favorites = ["Seoul","Busan","Jeju","Jeonju","Tokyo"];
+const favorites = ["Seoul","Busan","Jeju","New York","Tokyo"];
 function renderFavorites(){
     const listEl = document.getElementById("favorites-list");
     listEl.innerHTML = "";
@@ -47,9 +47,32 @@ function addFavorite(city){
     }
 }
 
+/* 검색 기록 */
+let history = [];
+function renderHistory(){
+    const listEl = document.getElementById("history-list");
+    listEl.innerHTML = "";
+    history.slice(-10).reverse().forEach(city=>{
+        const li = document.createElement("li");
+        li.textContent = city;
+        li.onclick = ()=>{
+            document.getElementById("city-input").value = city;
+            fetchWeather();
+        };
+        listEl.appendChild(li);
+    });
+}
+function addHistory(city){
+    if(!history.includes(city)){
+        history.push(city);
+    }
+    renderHistory();
+}
+
 /* 날씨 조회 */
 async function fetchWeather() {
     const city = document.getElementById("city-input").value;
+    addHistory(city);
     const url = `${BASE_URL}?q=${city}&appid=${API_KEY}&units=metric&lang=kr`;
     errorEl.textContent = "날씨 정보를 가져오는 중...";
     try {
@@ -169,6 +192,7 @@ function animateParticles(){
 
 window.onload = () => {
     renderFavorites();
+    renderHistory();
     fetchWeather();
 };
 window.onresize = ()=>{ canvas.width=window.innerWidth; canvas.height=window.innerHeight; };
